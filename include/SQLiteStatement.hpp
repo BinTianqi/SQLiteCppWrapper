@@ -16,44 +16,44 @@ public:
 
     ~SQLiteStatement();
 
-    int step() const;
+    int step();
 
-    void reset() const;
+    void reset();
 
     void finalize();
 
     /** @throws sqlite_error if the parameter is not found */
     [[nodiscard]] int getBindParamIndex(const std::string &name) const;
 
-    void clearBindings() const;
+    void clearBindings();
 
-    void bindBlob(int index, const void *data, uint64_t size, SQLiteBindDestructor destructor) const;
+    void bindBlob(int index, const void *data, uint64_t size, SQLiteBindDestructor destructor);
 
-    void bindDouble(int index, double value) const;
+    void bindDouble(int index, double value);
 
-    void bindInt(int index, int value) const;
+    void bindInt(int index, int value);
 
-    void bindInt64(int index, int64_t value) const;
+    void bindInt64(int index, int64_t value);
 
-    void bindNull(int index) const;
+    void bindNull(int index);
 
-    void bindString(int index, const std::string &text, SQLiteBindDestructor destructor) const;
+    void bindString(int index, const std::string &text, SQLiteBindDestructor destructor);
 
-    void bindU16string(int index, const std::u16string &text, SQLiteBindDestructor destructor) const;
+    void bindU16string(int index, const std::u16string &text, SQLiteBindDestructor destructor);
 
-    void bindText(int index, const char *text, int length, SQLiteBindDestructor destructor) const;
+    void bindText(int index, const char *text, int length, SQLiteBindDestructor destructor);
 
-    void bindText16(int index, const void *text, int length, SQLiteBindDestructor destructor) const;
+    void bindText16(int index, const void *text, int length, SQLiteBindDestructor destructor);
 
-    void bindText64(int index, const char *text, uint64_t size, SQLiteBindDestructor destructor, int encoding) const;
+    void bindText64(int index, const char *text, uint64_t size, SQLiteBindDestructor destructor, int encoding);
 
-    void bindValue(int index, const sqlite3_value *value) const;
+    void bindValue(int index, const sqlite3_value *value);
 
-    void bindPointer(int index, void *pointer, const char *type, SQLiteBindDestructor destructor) const;
+    void bindPointer(int index, void *pointer, const char *type, SQLiteBindDestructor destructor);
 
-    void bindZeroBlob(int index, int size) const;
+    void bindZeroBlob(int index, int size);
 
-    void bindZeroBlob64(int index, uint64_t size) const;
+    void bindZeroBlob64(int index, uint64_t size);
 
     [[nodiscard]] const void *getBlob(int index) const;
 

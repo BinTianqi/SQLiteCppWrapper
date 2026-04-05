@@ -19,7 +19,7 @@ void SQLiteDatabase::close() {
 }
 
 int SQLiteDatabase::execute(const std::string &stmtText) const {
-    const auto stmt = prepare(stmtText);
+    auto stmt = prepare(stmtText);
     return stmt.step();
 }
 

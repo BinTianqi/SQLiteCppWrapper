@@ -4,7 +4,7 @@ SQLiteStatement::~SQLiteStatement() {
     finalize();
 }
 
-int SQLiteStatement::step() const {
+int SQLiteStatement::step() {
     checkNotFinalized();
     const auto ret = sqlite3_step(_sqliteStmt);
     if (ret != SQLITE_OK && ret != SQLITE_DONE && ret != SQLITE_ROW) {
@@ -13,7 +13,7 @@ int SQLiteStatement::step() const {
     return ret;
 }
 
-void SQLiteStatement::reset() const {
+void SQLiteStatement::reset() {
     checkNotFinalized();
     const auto ret = sqlite3_reset(_sqliteStmt);
     if (ret != SQLITE_OK && ret != SQLITE_DONE && ret != SQLITE_ROW) {
@@ -37,38 +37,38 @@ int SQLiteStatement::getBindParamIndex(const std::string &name) const {
     return index;
 }
 
-void SQLiteStatement::clearBindings() const {
+void SQLiteStatement::clearBindings() {
     checkNotFinalized();
     sqlite3_clear_bindings(_sqliteStmt);
 }
 
 void SQLiteStatement::bindBlob(
     const int index, const void *data, const uint64_t size, const SQLiteBindDestructor destructor
-) const {
+) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_blob64(_sqliteStmt, index, data, size, destructor);
     checkBindOk(ret);
 }
 
-void SQLiteStatement::bindDouble(const int index, const double value) const {
+void SQLiteStatement::bindDouble(const int index, const double value) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_double(_sqliteStmt, index, value);
     checkBindOk(ret);
 }
 
-void SQLiteStatement::bindInt(const int index, const int value) const {
+void SQLiteStatement::bindInt(const int index, const int value) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_int(_sqliteStmt, index, value);
     checkBindOk(ret);
 }
 
-void SQLiteStatement::bindInt64(const int index, const int64_t value) const {
+void SQLiteStatement::bindInt64(const int index, const int64_t value) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_int64(_sqliteStmt, index, value);
     checkBindOk(ret);
 }
 
-void SQLiteStatement::bindNull(const int index) const {
+void SQLiteStatement::bindNull(const int index) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_null(_sqliteStmt, index);
     checkBindOk(ret);
@@ -76,7 +76,7 @@ void SQLiteStatement::bindNull(const int index) const {
 
 void SQLiteStatement::bindString(
     const int index, const std::string &text, const SQLiteBindDestructor destructor
-) const {
+) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_text(_sqliteStmt, index, text.c_str(), -1, destructor);
     checkBindOk(ret);
@@ -84,7 +84,7 @@ void SQLiteStatement::bindString(
 
 void SQLiteStatement::bindU16string(
     const int index, const std::u16string &text, const SQLiteBindDestructor destructor
-) const {
+) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_text16(_sqliteStmt, index, text.c_str(), -1, destructor);
     checkBindOk(ret);
@@ -92,7 +92,7 @@ void SQLiteStatement::bindU16string(
 
 void SQLiteStatement::bindText(
     const int index, const char *text, const int length, const SQLiteBindDestructor destructor
-) const {
+) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_text(_sqliteStmt, index, text, length, destructor);
     checkBindOk(ret);
@@ -100,7 +100,7 @@ void SQLiteStatement::bindText(
 
 void SQLiteStatement::bindText16(
     const int index, const void *text, const int length, const SQLiteBindDestructor destructor
-) const {
+) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_text16(_sqliteStmt, index, text, length, destructor);
     checkBindOk(ret);
@@ -108,7 +108,7 @@ void SQLiteStatement::bindText16(
 
 void SQLiteStatement::bindText64(
     const int index, const char *text, const uint64_t size, const SQLiteBindDestructor destructor, const int encoding
-) const {
+) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_text64(
         _sqliteStmt, index, text, size, destructor, encoding
@@ -116,7 +116,7 @@ void SQLiteStatement::bindText64(
     checkBindOk(ret);
 }
 
-void SQLiteStatement::bindValue(const int index, const sqlite3_value *value) const {
+void SQLiteStatement::bindValue(const int index, const sqlite3_value *value) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_value(_sqliteStmt, index, value);
     checkBindOk(ret);
@@ -124,19 +124,19 @@ void SQLiteStatement::bindValue(const int index, const sqlite3_value *value) con
 
 void SQLiteStatement::bindPointer(
     const int index, void *pointer, const char *type, const SQLiteBindDestructor destructor
-) const {
+) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_pointer(_sqliteStmt, index, pointer, type, destructor);
     checkBindOk(ret);
 }
 
-void SQLiteStatement::bindZeroBlob(const int index, const int size) const {
+void SQLiteStatement::bindZeroBlob(const int index, const int size) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_zeroblob(_sqliteStmt, index, size);
     checkBindOk(ret);
 }
 
-void SQLiteStatement::bindZeroBlob64(const int index, const uint64_t size) const {
+void SQLiteStatement::bindZeroBlob64(const int index, const uint64_t size) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_zeroblob64(_sqliteStmt, index, size);
     checkBindOk(ret);
