@@ -1,7 +1,7 @@
 project(sqlite_cpp_wrapper LANGUAGES CXX)
 
 if(NOT TARGET SQLite3::SQLite3)
-    message(FATAL_ERROR "SQLite::SQLite3 target not found. Please provide it.")
+    message(FATAL_ERROR "SQLite3::SQLite3 target not found. Please provide it.")
 endif()
 
 file(GLOB_RECURSE SRCS ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp)

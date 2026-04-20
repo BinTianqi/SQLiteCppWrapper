@@ -4,8 +4,14 @@
 
 #include "./SQLiteDatabase.hpp"
 
+/**
+ * Wrapper of `sqlite3_backup`
+ */
 class SQLiteBackup {
 public:
+    /**
+     * @throws sqlite_error if initialization failed
+     */
     SQLiteBackup(
         const SQLiteDatabase &destDb,
         const std::string &destName,
@@ -13,6 +19,9 @@ public:
         const std::string &srcName
     );
 
+    /**
+     * @throws sqlite_error if initialization failed
+     */
     SQLiteBackup(
         const std::unique_ptr<SQLiteDatabase> &destDb,
         const std::string &destName,
@@ -22,12 +31,24 @@ public:
 
     ~SQLiteBackup();
 
+    /**
+     * Wrapper of `sqlite3_backup_step()`
+     */
     int step(int page) const;
 
+    /**
+     * Wrapper of `sqlite3_backup_remaining()`
+     */
     [[nodiscard]] int getRemaining() const;
 
-    [[nodiscard]] int getPageCount() const ;
+    /**
+     * Wrapper of `sqlite3_backup_pagecount()`
+     */
+    [[nodiscard]] int getPageCount() const;
 
+    /**
+     * Wrapper of `sqlite3_backup_pagecount()`
+     */
     void finish();
 
 private:

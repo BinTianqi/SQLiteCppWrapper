@@ -4,6 +4,9 @@
 
 #include <sqlite3.h>
 
+/**
+ * It may contain a `resCode`
+ */
 class sqlite_error : public std::runtime_error {
 public:
     explicit sqlite_error(

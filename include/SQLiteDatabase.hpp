@@ -7,7 +7,7 @@
 
 namespace fs = std::filesystem;
 
-/** Wrapper of \ref sqlite3  */
+/** Wrapper of `sqlite3`  */
 class SQLiteDatabase {
 public:
     /**
@@ -15,6 +15,7 @@ public:
      * @param dbPath Path of the database file
      * @param flags SQLite open flags. Default to SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE
      * @param vfs SQLite VFS module
+     * @throws sqlite_error if failed to open database
      */
     explicit SQLiteDatabase(
         const fs::path &dbPath, int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE,
@@ -26,16 +27,22 @@ public:
     /** Close the database connection if it's not already closed. */
     void close();
 
+    /**
+     * Prepare, step and close a statement
+     */
     int execute(const std::string &stmtText) const;
 
     /**
-     * Wrapper of sqlite3_prepare_v3
+     * Wrapper of `sqlite3_prepare_v3()`
      */
     [[nodiscard]] SQLiteStatement prepare(const std::string &stmtText, unsigned int flags = 0) const;
 
-    /** @see prepare */
+    /**
+     * @see prepare
+     */
     [[nodiscard]] SQLiteStatement prepare16(const std::u16string &stmtText, unsigned int flags = 0) const;
 
+    /** Gets the internal `sqlite3` database handle */
     [[nodiscard]] sqlite3 *getSqliteHandle() const;
 
 private:
