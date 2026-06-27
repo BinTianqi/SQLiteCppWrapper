@@ -5,8 +5,6 @@
 
 #include "./SQLiteStatement.hpp"
 
-namespace fs = std::filesystem;
-
 /** Wrapper of `sqlite3`  */
 class SQLiteDatabase {
 public:
@@ -18,7 +16,7 @@ public:
      * @throws sqlite_error if failed to open database
      */
     explicit SQLiteDatabase(
-        const fs::path &dbPath, int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE,
+        const std::filesystem::path &dbPath, int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE,
         const char *vfs = nullptr
     );
 
@@ -30,17 +28,17 @@ public:
     /**
      * Prepare, step and close a statement
      */
-    int execute(const std::string &stmtText) const;
+    int execute(std::string_view) const;
 
     /**
      * Wrapper of `sqlite3_prepare_v3()`
      */
-    [[nodiscard]] SQLiteStatement prepare(const std::string &stmtText, unsigned int flags = 0) const;
+    [[nodiscard]] SQLiteStatement prepare(std::string_view, unsigned int flags = 0) const;
 
     /**
      * @see prepare
      */
-    [[nodiscard]] SQLiteStatement prepare16(const std::u16string &stmtText, unsigned int flags = 0) const;
+    [[nodiscard]] SQLiteStatement prepare16(std::u16string_view, unsigned int flags = 0) const;
 
     /** Gets the internal `sqlite3` database handle */
     [[nodiscard]] sqlite3 *getSqliteHandle() const;

@@ -1,10 +1,11 @@
 #include "SQLiteBackup.hpp"
 
 SQLiteBackup::SQLiteBackup(
-    const SQLiteDatabase &destDb, const std::string &destName, const SQLiteDatabase &srcDb, const std::string &srcName
+    const SQLiteDatabase &destDb, const std::string_view destName,
+    const SQLiteDatabase &srcDb, const std::string_view srcName
 ) {
     handle = sqlite3_backup_init(
-        destDb.getSqliteHandle(), destName.c_str(), srcDb.getSqliteHandle(), srcName.c_str()
+        destDb.getSqliteHandle(), destName.data(), srcDb.getSqliteHandle(), srcName.data()
     );
     if (handle == nullptr) {
         throw sqlite_error("Failed to initialize backup");
@@ -13,12 +14,12 @@ SQLiteBackup::SQLiteBackup(
 
 SQLiteBackup::SQLiteBackup(
     const std::unique_ptr<SQLiteDatabase> &destDb,
-    const std::string &destName,
+    const std::string_view destName,
     const std::unique_ptr<SQLiteDatabase> &srcDb,
-    const std::string &srcName
+    const std::string_view srcName
 ) {
     handle = sqlite3_backup_init(
-        destDb->getSqliteHandle(), destName.c_str(), srcDb->getSqliteHandle(), srcName.c_str()
+        destDb->getSqliteHandle(), destName.data(), srcDb->getSqliteHandle(), srcName.data()
     );
     if (handle == nullptr) {
         throw sqlite_error("Failed to initialize backup");

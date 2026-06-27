@@ -45,7 +45,7 @@ public:
      *
      * @throws sqlite_error if the parameter is not found
      */
-    [[nodiscard]] int getBindParamIndex(const std::string &name) const;
+    [[nodiscard]] int getBindParamIndex(std::string_view name) const;
 
     /**
      * Wrapper of `sqlite3_clear_bindings()`
@@ -80,27 +80,17 @@ public:
     /**
      * Wrapper of `sqlite3_bind_text()`
      */
-    void bindString(int index, const std::string &text, SQLiteBindDestructor destructor);
+    void bindText(int index, std::string_view text, SQLiteBindDestructor destructor);
 
     /**
      * Wrapper of `sqlite3_bind_text16()`
      */
-    void bindU16string(int index, const std::u16string &text, SQLiteBindDestructor destructor);
-
-    /**
-     * Wrapper of `sqlite3_bind_text()`
-     */
-    void bindText(int index, const char *text, int length, SQLiteBindDestructor destructor);
-
-    /**
-     * Wrapper of `sqlite3_bind_text16()`
-     */
-    void bindText16(int index, const void *text, int length, SQLiteBindDestructor destructor);
+    void bindText16(int index, std::u16string_view text, SQLiteBindDestructor destructor);
 
     /**
      * Wrapper of `sqlite3_bind_text64()`
      */
-    void bindText64(int index, const char *text, uint64_t size, SQLiteBindDestructor destructor, int encoding);
+    void bindText64(int index, std::string_view text, SQLiteBindDestructor destructor, int encoding);
 
     /**
      * Wrapper of `sqlite3_bind_value()`

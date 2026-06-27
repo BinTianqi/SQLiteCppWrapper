@@ -1,4 +1,4 @@
 #pragma once
 
-#include "./SQLiteDatabase.hpp"
-#include "./SQLiteBackup.hpp"
+#include "SQLiteDatabase.hpp"
+#include "SQLiteBackup.hpp"

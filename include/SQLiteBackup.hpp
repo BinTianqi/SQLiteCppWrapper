@@ -2,7 +2,7 @@
 
 #include <sqlite3.h>
 
-#include "./SQLiteDatabase.hpp"
+#include "SQLiteDatabase.hpp"
 
 /**
  * Wrapper of `sqlite3_backup`
@@ -14,9 +14,9 @@ public:
      */
     SQLiteBackup(
         const SQLiteDatabase &destDb,
-        const std::string &destName,
+        std::string_view destName,
         const SQLiteDatabase &srcDb,
-        const std::string &srcName
+        std::string_view srcName
     );
 
     /**
@@ -24,9 +24,9 @@ public:
      */
     SQLiteBackup(
         const std::unique_ptr<SQLiteDatabase> &destDb,
-        const std::string &destName,
+        std::string_view destName,
         const std::unique_ptr<SQLiteDatabase> &srcDb,
-        const std::string &srcName
+        std::string_view srcName
     );
 
     ~SQLiteBackup();

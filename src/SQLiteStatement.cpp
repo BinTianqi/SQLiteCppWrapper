@@ -1,5 +1,7 @@
 #include "SQLiteStatement.hpp"
 
+#include <format>
+
 SQLiteStatement::~SQLiteStatement() {
     finalize();
 }
@@ -28,11 +30,11 @@ void SQLiteStatement::finalize() {
     }
 }
 
-int SQLiteStatement::getBindParamIndex(const std::string &name) const {
+int SQLiteStatement::getBindParamIndex(std::string_view name) const {
     checkNotFinalized();
-    const auto index = sqlite3_bind_parameter_index(_sqliteStmt, name.c_str());
+    const auto index = sqlite3_bind_parameter_index(_sqliteStmt, name.data());
     if (index == 0) {
-        throw sqlite_error("Parameter " + name + " not found");
+        throw sqlite_error(std::format("Parameter {} not found", name));
     }
     return index;
 }
@@ -74,44 +76,28 @@ void SQLiteStatement::bindNull(const int index) {
     checkBindOk(ret);
 }
 
-void SQLiteStatement::bindString(
-    const int index, const std::string &text, const SQLiteBindDestructor destructor
-) {
-    checkNotFinalized();
-    const auto ret = sqlite3_bind_text(_sqliteStmt, index, text.c_str(), -1, destructor);
-    checkBindOk(ret);
-}
-
-void SQLiteStatement::bindU16string(
-    const int index, const std::u16string &text, const SQLiteBindDestructor destructor
-) {
-    checkNotFinalized();
-    const auto ret = sqlite3_bind_text16(_sqliteStmt, index, text.c_str(), -1, destructor);
-    checkBindOk(ret);
-}
-
 void SQLiteStatement::bindText(
-    const int index, const char *text, const int length, const SQLiteBindDestructor destructor
+    const int index, const std::string_view text, const SQLiteBindDestructor destructor
 ) {
     checkNotFinalized();
-    const auto ret = sqlite3_bind_text(_sqliteStmt, index, text, length, destructor);
+    const auto ret = sqlite3_bind_text(_sqliteStmt, index, text.data(), static_cast<int>(text.length()), destructor);
     checkBindOk(ret);
 }
 
 void SQLiteStatement::bindText16(
-    const int index, const void *text, const int length, const SQLiteBindDestructor destructor
+    const int index, const std::u16string_view text, const SQLiteBindDestructor destructor
 ) {
     checkNotFinalized();
-    const auto ret = sqlite3_bind_text16(_sqliteStmt, index, text, length, destructor);
+    const auto ret = sqlite3_bind_text16(_sqliteStmt, index, text.data(), static_cast<int>(text.length()), destructor);
     checkBindOk(ret);
 }
 
 void SQLiteStatement::bindText64(
-    const int index, const char *text, const uint64_t size, const SQLiteBindDestructor destructor, const int encoding
+    const int index, const std::string_view text, const SQLiteBindDestructor destructor, const int encoding
 ) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_text64(
-        _sqliteStmt, index, text, size, destructor, encoding
+        _sqliteStmt, index, text.data(), text.length(), destructor, encoding
     );
     checkBindOk(ret);
 }
