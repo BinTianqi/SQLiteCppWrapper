@@ -2,6 +2,8 @@
 
 #include <format>
 
+#include "SQLiteException.hpp"
+
 SQLiteStatement::~SQLiteStatement() {
     finalize();
 }
@@ -52,10 +54,20 @@ void SQLiteStatement::bindBlob(
     checkBindOk(ret);
 }
 
+void SQLiteStatement::bindBlob(
+    std::string_view param, const void *data, uint64_t size, SQLiteBindDestructor destructor
+) {
+    bindBlob(getBindParamIndex(param), data, size, destructor);
+}
+
 void SQLiteStatement::bindDouble(const int index, const double value) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_double(_sqliteStmt, index, value);
     checkBindOk(ret);
+}
+
+void SQLiteStatement::bindDouble(std::string_view param, double value) {
+    bindDouble(getBindParamIndex(param), value);
 }
 
 void SQLiteStatement::bindInt(const int index, const int value) {
@@ -64,16 +76,28 @@ void SQLiteStatement::bindInt(const int index, const int value) {
     checkBindOk(ret);
 }
 
+void SQLiteStatement::bindInt(std::string_view param, int value) {
+    bindInt(getBindParamIndex(param), value);
+}
+
 void SQLiteStatement::bindInt64(const int index, const int64_t value) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_int64(_sqliteStmt, index, value);
     checkBindOk(ret);
 }
 
+void SQLiteStatement::bindInt64(std::string_view param, int64_t value) {
+    bindInt64(getBindParamIndex(param), value);
+}
+
 void SQLiteStatement::bindNull(const int index) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_null(_sqliteStmt, index);
     checkBindOk(ret);
+}
+
+void SQLiteStatement::bindNull(std::string_view param) {
+    bindNull(getBindParamIndex(param));
 }
 
 void SQLiteStatement::bindText(
@@ -84,12 +108,24 @@ void SQLiteStatement::bindText(
     checkBindOk(ret);
 }
 
+void SQLiteStatement::bindText(
+    std::string_view param, std::string_view text, SQLiteBindDestructor destructor
+) {
+    bindText(getBindParamIndex(param), text, destructor);
+}
+
 void SQLiteStatement::bindText16(
     const int index, const std::u16string_view text, const SQLiteBindDestructor destructor
 ) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_text16(_sqliteStmt, index, text.data(), static_cast<int>(text.length()), destructor);
     checkBindOk(ret);
+}
+
+void SQLiteStatement::bindText16(
+    std::string_view param, std::u16string_view text, SQLiteBindDestructor destructor
+) {
+    bindText16(getBindParamIndex(param), text, destructor);
 }
 
 void SQLiteStatement::bindText64(
@@ -102,10 +138,20 @@ void SQLiteStatement::bindText64(
     checkBindOk(ret);
 }
 
+void SQLiteStatement::bindText64(
+    std::string_view param, std::string_view text, SQLiteBindDestructor destructor, int encoding
+) {
+    bindText64(getBindParamIndex(param), text, destructor, encoding);
+}
+
 void SQLiteStatement::bindValue(const int index, const sqlite3_value *value) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_value(_sqliteStmt, index, value);
     checkBindOk(ret);
+}
+
+void SQLiteStatement::bindValue(std::string_view param, const sqlite3_value *value) {
+    bindValue(getBindParamIndex(param), value);
 }
 
 void SQLiteStatement::bindPointer(
@@ -116,16 +162,30 @@ void SQLiteStatement::bindPointer(
     checkBindOk(ret);
 }
 
+void SQLiteStatement::bindPointer(
+    std::string_view param, void *pointer, const char *type, SQLiteBindDestructor destructor
+) {
+    bindPointer(getBindParamIndex(param), pointer, type, destructor);
+}
+
 void SQLiteStatement::bindZeroBlob(const int index, const int size) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_zeroblob(_sqliteStmt, index, size);
     checkBindOk(ret);
 }
 
+void SQLiteStatement::bindZeroBlob(std::string_view param, int size) {
+    bindZeroBlob(getBindParamIndex(param), size);
+}
+
 void SQLiteStatement::bindZeroBlob64(const int index, const uint64_t size) {
     checkNotFinalized();
     const auto ret = sqlite3_bind_zeroblob64(_sqliteStmt, index, size);
     checkBindOk(ret);
+}
+
+void SQLiteStatement::bindZeroBlob64(std::string_view param, uint64_t size) {
+    bindZeroBlob64(getBindParamIndex(param), size);
 }
 
 const void *SQLiteStatement::getBlob(const int index) const {
