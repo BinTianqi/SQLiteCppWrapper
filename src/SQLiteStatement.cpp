@@ -1,6 +1,10 @@
 #include "SQLiteStatement.hpp"
 
+#include <cstddef>
 #include <format>
+#include <sqlite3.h>
+#include <string>
+#include <string_view>
 
 #include "SQLiteException.hpp"
 
@@ -208,26 +212,28 @@ int64_t SQLiteStatement::getInt64(const int index) const {
     return sqlite3_column_int64(_sqliteStmt, index);
 }
 
-const unsigned char *SQLiteStatement::getText(const int index) const {
+std::string_view SQLiteStatement::getText(const int index) const {
     checkColumnIndex(index);
-    return sqlite3_column_text(_sqliteStmt, index);
+    return {
+        reinterpret_cast<const char *>(sqlite3_column_text(_sqliteStmt, index)),
+        static_cast<size_t>(sqlite3_column_bytes(_sqliteStmt, index))
+    };
 }
 
-const void *SQLiteStatement::getText16(const int index) const {
+std::u16string_view SQLiteStatement::getText16(const int index) const {
     checkColumnIndex(index);
-    return sqlite3_column_text16(_sqliteStmt, index);
+    return {
+        reinterpret_cast<const char16_t *>(sqlite3_column_text16(_sqliteStmt, index)),
+        static_cast<size_t>(sqlite3_column_bytes16(_sqliteStmt, index)) / sizeof(char16_t)
+    };
 }
 
 std::string SQLiteStatement::getString(const int index) const {
-    checkColumnIndex(index);
-    const auto ptr = sqlite3_column_text(_sqliteStmt, index);
-    return {reinterpret_cast<const char *>(ptr)};
+    return std::string(getText(index));
 }
 
 std::u16string SQLiteStatement::getU16string(const int index) const {
-    checkColumnIndex(index);
-    const auto ptr = sqlite3_column_text16(_sqliteStmt, index);
-    return {static_cast<const char16_t *>(ptr)};
+    return std::u16string(getText16(index));
 }
 
 sqlite3_value *SQLiteStatement::getValue(const int index) const {

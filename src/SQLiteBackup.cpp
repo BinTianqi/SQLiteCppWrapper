@@ -1,5 +1,7 @@
 #include "SQLiteBackup.hpp"
 
+#include "SQLiteException.hpp"
+
 SQLiteBackup::SQLiteBackup(
     const SQLiteDatabase &destDb, const std::string_view destName,
     const SQLiteDatabase &srcDb, const std::string_view srcName

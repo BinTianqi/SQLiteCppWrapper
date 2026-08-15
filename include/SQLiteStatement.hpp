@@ -205,15 +205,14 @@ public:
      *
      * @throws sqlite_error if column index out of range
      */
-    [[nodiscard]] const unsigned char *getText(int index) const;
+    [[nodiscard]] std::string_view getText(int index) const;
 
     /**
      * Wrapper of `sqlite3_column_text16()`
      *
      * @throws sqlite_error if column index out of range
      */
-    [[nodiscard]] const void *getText16(int index) const;
-
+    [[nodiscard]] std::u16string_view getText16(int index) const;
     /**
      * Wrapper of `sqlite3_column_text()`
      *

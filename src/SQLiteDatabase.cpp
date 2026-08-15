@@ -1,5 +1,7 @@
 #include "SQLiteDatabase.hpp"
 
+#include "SQLiteException.hpp"
+
 SQLiteDatabase::SQLiteDatabase(const std::filesystem::path &dbPath, const int flags, const char *vfs) {
     const auto ret = sqlite3_open_v2(dbPath.c_str(), &_sqliteDb, flags, vfs);
     if (ret != SQLITE_OK) {
